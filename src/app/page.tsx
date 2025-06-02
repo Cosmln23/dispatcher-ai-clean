@@ -150,17 +150,28 @@ const RealTimeChart: React.FC<{ data: any[] }> = ({ data }) => {
 };
 
 export default function ComingSoon() {
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [matrixText, setMatrixText] = useState('');
+  const [currentTime, setCurrentTime] = useState<Date | null>(null);
+  const [matrixText, setMatrixText] = useState('ABCDEFGHIJKLMNOPQRST');
+  const [isClient, setIsClient] = useState(false);
 
-  // Update clock
+  // Fix hydration - only run client-side
   useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
+    setIsClient(true);
+    setCurrentTime(new Date());
   }, []);
 
-  // Matrix effect
+  // Update clock - only client-side
   useEffect(() => {
+    if (!isClient) return;
+    
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, [isClient]);
+
+  // Matrix effect - only client-side  
+  useEffect(() => {
+    if (!isClient) return;
+    
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     const interval = setInterval(() => {
       let result = '';
@@ -170,7 +181,7 @@ export default function ComingSoon() {
       setMatrixText(result);
     }, 200);
     return () => clearInterval(interval);
-  }, []);
+  }, [isClient]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black text-matrix-500 p-6">
@@ -280,7 +291,7 @@ export default function ComingSoon() {
         {/* Footer */}
         <div className="text-center space-y-4">
           <div className="text-matrix-400 font-cyber">
-            Current Time: {currentTime.toLocaleTimeString('ro-RO')} • 
+            Current Time: {isClient && currentTime ? currentTime.toLocaleTimeString('ro-RO') : '--:--:--'} • 
             System Status: <span className="text-matrix-500">OPERATIONAL</span>
           </div>
           

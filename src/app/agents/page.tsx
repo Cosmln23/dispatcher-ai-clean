@@ -241,8 +241,17 @@ export default function AIAgents() {
     activeAgents: 0,
     totalTasks: 0
   });
+  const [isClient, setIsClient] = useState(false);
 
+  // Initialize client-side only
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Update agents data only on client-side
+  useEffect(() => {
+    if (!isClient) return;
+    
     const interval = setInterval(() => {
       setAgents(prev => prev.map(agent => ({
         ...agent,
@@ -256,7 +265,7 @@ export default function AIAgents() {
     }, 4000);
     
     return () => clearInterval(interval);
-  }, []);
+  }, [isClient]);
 
   useEffect(() => {
     const totalProcessingPower = agents.reduce((sum, agent) => sum + agent.processingPower, 0);
@@ -476,11 +485,11 @@ export default function AIAgents() {
             </h3>
             
             <div className="space-y-2 max-h-40 overflow-y-auto font-cyber text-xs">
-              <div className="text-matrix-400">[{new Date().toLocaleTimeString()}] ARIA: Route optimization completed</div>
-              <div className="text-cyber-cyan">[{new Date(Date.now() - 15000).toLocaleTimeString()}] NEXUS: Fleet coordination updated</div>
-              <div className="text-cyber-purple">[{new Date(Date.now() - 32000).toLocaleTimeString()}] SIGMA: Analytics model refreshed</div>
-              <div className="text-cyber-yellow">[{new Date(Date.now() - 47000).toLocaleTimeString()}] NOVA: Voice training in progress</div>
-              <div className="text-matrix-400">[{new Date(Date.now() - 63000).toLocaleTimeString()}] QUBIT: Quantum processing optimized</div>
+              <div className="text-matrix-400">[{isClient ? new Date().toLocaleTimeString() : '--:--:--'}] ARIA: Route optimization completed</div>
+              <div className="text-cyber-cyan">[{isClient ? new Date(Date.now() - 15000).toLocaleTimeString() : '--:--:--'}] NEXUS: Fleet coordination updated</div>
+              <div className="text-cyber-purple">[{isClient ? new Date(Date.now() - 32000).toLocaleTimeString() : '--:--:--'}] SIGMA: Analytics model refreshed</div>
+              <div className="text-cyber-yellow">[{isClient ? new Date(Date.now() - 47000).toLocaleTimeString() : '--:--:--'}] NOVA: Voice training in progress</div>
+              <div className="text-matrix-400">[{isClient ? new Date(Date.now() - 63000).toLocaleTimeString() : '--:--:--'}] QUBIT: Quantum processing optimized</div>
             </div>
           </div>
         </div>

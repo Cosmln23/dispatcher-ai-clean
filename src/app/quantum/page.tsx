@@ -30,8 +30,17 @@ export default function QuantumOptimization() {
     fidelity: 99.9
   });
   const [algorithm, setAlgorithm] = useState('quantum');
+  const [isClient, setIsClient] = useState(false);
 
+  // Initialize client-side only
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Update quantum metrics only on client-side
+  useEffect(() => {
+    if (!isClient) return;
+    
     const interval = setInterval(() => {
       setQuantumMetrics(prev => ({
         entanglement: Math.max(80, Math.min(100, prev.entanglement + (Math.random() - 0.5) * 2)),
@@ -42,7 +51,7 @@ export default function QuantumOptimization() {
       }));
     }, 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isClient]);
 
   const runOptimization = async () => {
     setIsOptimizing(true);

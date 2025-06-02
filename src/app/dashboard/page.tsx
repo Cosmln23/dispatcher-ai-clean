@@ -4,7 +4,15 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { HolographicText, GlitchText } from '@/components/effects/MatrixRain';
 
-// Mock data pentru dashboard
+// Mock data pentru dashboard - static pentru SSR
+const getInitialData = () => ({
+  neuralActivity: 85,
+  quantumCoherence: 92,
+  activeAgents: 5,
+  transportRequests: 125,
+  efficiency: 94,
+});
+
 const generateMockData = () => ({
   neuralActivity: Math.floor(Math.random() * 40) + 60,
   quantumCoherence: Math.floor(Math.random() * 30) + 70,
@@ -43,16 +51,26 @@ const AIAgent = ({ name, status, performance, specialty }: any) => (
 );
 
 export default function Dashboard() {
-  const [metrics, setMetrics] = useState(generateMockData());
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [metrics, setMetrics] = useState(getInitialData());
+  const [currentTime, setCurrentTime] = useState<Date | null>(null);
+  const [isClient, setIsClient] = useState(false);
 
+  // Initialize client-side only
   useEffect(() => {
+    setIsClient(true);
+    setCurrentTime(new Date());
+  }, []);
+
+  // Update data only on client-side
+  useEffect(() => {
+    if (!isClient) return;
+    
     const timer = setInterval(() => {
       setCurrentTime(new Date());
       setMetrics(generateMockData());
     }, 3000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isClient]);
 
   const agents = [
     { name: 'ARIA', status: 'online', performance: 94, specialty: 'Route Optimization' },
@@ -152,18 +170,20 @@ export default function Dashboard() {
             
             {/* Simulated Activity Graph */}
             <div className="h-32 bg-dark-matrix rounded relative overflow-hidden">
-              <div className="absolute inset-0 flex items-end space-x-1 p-2">
-                {Array.from({length: 20}).map((_, i) => (
-                  <div
-                    key={i}
-                    className="bg-matrix-500 w-full"
-                    style={{
-                      height: `${Math.random() * 80 + 20}%`,
-                      opacity: 0.7 + Math.random() * 0.3
-                    }}
-                  />
-                ))}
-              </div>
+              {isClient && (
+                <div className="absolute inset-0 flex items-end space-x-1 p-2">
+                  {Array.from({length: 20}).map((_, i) => (
+                    <div
+                      key={i}
+                      className="bg-matrix-500 w-full"
+                      style={{
+                        height: `${Math.random() * 80 + 20}%`,
+                        opacity: 0.7 + Math.random() * 0.3
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
               <div className="absolute top-2 left-2 text-xs text-matrix-400">
                 Neural Activity Pattern
               </div>
@@ -202,11 +222,11 @@ export default function Dashboard() {
             </h3>
             
             <div className="space-y-2 max-h-40 overflow-y-auto font-cyber text-sm">
-              <div className="text-matrix-400">[{currentTime.toLocaleTimeString()}] ARIA: Route optimization completed - 23% efficiency gain</div>
-              <div className="text-cyber-cyan">[{new Date(Date.now() - 15000).toLocaleTimeString()}] NEXUS: New transport request processed</div>
-              <div className="text-cyber-purple">[{new Date(Date.now() - 32000).toLocaleTimeString()}] QUBIT: Quantum coherence maintained at 96%</div>
-              <div className="text-cyber-yellow">[{new Date(Date.now() - 47000).toLocaleTimeString()}] SIGMA: Predictive model updated</div>
-              <div className="text-matrix-400">[{new Date(Date.now() - 63000).toLocaleTimeString()}] System: Neural network synchronization complete</div>
+              <div className="text-matrix-400">[{isClient && currentTime ? currentTime.toLocaleTimeString() : '--:--:--'}] ARIA: Route optimization completed - 23% efficiency gain</div>
+              <div className="text-cyber-cyan">[{isClient ? new Date(Date.now() - 15000).toLocaleTimeString() : '--:--:--'}] NEXUS: New transport request processed</div>
+              <div className="text-cyber-purple">[{isClient ? new Date(Date.now() - 32000).toLocaleTimeString() : '--:--:--'}] QUBIT: Quantum coherence maintained at 96%</div>
+              <div className="text-cyber-yellow">[{isClient ? new Date(Date.now() - 47000).toLocaleTimeString() : '--:--:--'}] SIGMA: Predictive model updated</div>
+              <div className="text-matrix-400">[{isClient ? new Date(Date.now() - 63000).toLocaleTimeString() : '--:--:--'}] System: Neural network synchronization complete</div>
             </div>
           </div>
         </div>

@@ -178,8 +178,17 @@ export default function FleetManagement() {
     utilization: 78,
     efficiency: 91
   });
+  const [isClient, setIsClient] = useState(false);
 
+  // Initialize client-side only
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Update fleet data only on client-side
+  useEffect(() => {
+    if (!isClient) return;
+    
     const interval = setInterval(() => {
       setFleet(prev => prev.map(vehicle => ({
         ...vehicle,
@@ -196,7 +205,7 @@ export default function FleetManagement() {
     }, 3000);
     
     return () => clearInterval(interval);
-  }, []);
+  }, [isClient]);
 
   const handleDispatch = (vehicleId: string) => {
     console.log(`Dispatching vehicle ${vehicleId}`);
