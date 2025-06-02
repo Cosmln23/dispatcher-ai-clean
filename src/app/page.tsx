@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useNeural, useNeuralMetrics, useAIAgents } from '@/lib/providers/neural-provider';
 import { HolographicText, GlitchText } from '@/components/effects/MatrixRain';
 
@@ -215,33 +216,41 @@ export default function ComingSoon() {
         {/* Main Message */}
         <div className="neural-card p-8 text-center">
           <h2 className="text-3xl md:text-4xl font-neural mb-6 text-matrix-300">
-            COMING SOON
+            LAUNCH SEQUENCE INITIATED
           </h2>
           
           <p className="text-xl text-matrix-400 mb-6 font-cyber">
-            Sistemul de transport futurist cu AGI este în curs de dezvoltare...
+            Sistemul de transport futurist cu AGI este acum LIVE!
           </p>
           
           <div className="space-y-4 text-lg">
-            <div className="flex items-center justify-between p-3 bg-dark-matrix rounded">
-              <span className="font-cyber text-matrix-400">✅ Neural Dashboard</span>
-              <span className="text-matrix-500">READY</span>
-            </div>
+            <Link href="/dashboard" className="block">
+              <div className="flex items-center justify-between p-3 bg-dark-matrix rounded hover:bg-matrix-500/10 transition-all cursor-pointer group">
+                <span className="font-cyber text-matrix-400 group-hover:text-matrix-300">✅ Neural Dashboard</span>
+                <span className="text-matrix-500 group-hover:text-matrix-400">READY → ENTER</span>
+              </div>
+            </Link>
             
-            <div className="flex items-center justify-between p-3 bg-dark-matrix rounded">
-              <span className="font-cyber text-matrix-400">⚡ Quantum Optimization</span>
-              <span className="text-cyber-yellow">IN PROGRESS</span>
-            </div>
+            <Link href="/quantum" className="block">
+              <div className="flex items-center justify-between p-3 bg-dark-matrix rounded hover:bg-cyber-purple/10 transition-all cursor-pointer group">
+                <span className="font-cyber text-matrix-400 group-hover:text-cyber-purple">⚡ Quantum Optimization</span>
+                <span className="text-cyber-yellow group-hover:text-cyber-purple">ACTIVE → ENTER</span>
+              </div>
+            </Link>
             
-            <div className="flex items-center justify-between p-3 bg-dark-matrix rounded">
-              <span className="font-cyber text-matrix-400">🚛 Fleet Management</span>
-              <span className="text-cyber-cyan">LOADING</span>
-            </div>
+            <Link href="/fleet" className="block">
+              <div className="flex items-center justify-between p-3 bg-dark-matrix rounded hover:bg-cyber-cyan/10 transition-all cursor-pointer group">
+                <span className="font-cyber text-matrix-400 group-hover:text-cyber-cyan">🚛 Fleet Management</span>
+                <span className="text-cyber-cyan group-hover:text-cyan-300">ONLINE → ENTER</span>
+              </div>
+            </Link>
             
-            <div className="flex items-center justify-between p-3 bg-dark-matrix rounded">
-              <span className="font-cyber text-matrix-400">📱 Mobile Apps</span>
-              <span className="text-gray-500">PENDING</span>
-            </div>
+            <Link href="/agents" className="block">
+              <div className="flex items-center justify-between p-3 bg-dark-matrix rounded hover:bg-cyber-pink/10 transition-all cursor-pointer group">
+                <span className="font-cyber text-matrix-400 group-hover:text-cyber-pink">🤖 AI Agents Control</span>
+                <span className="text-cyber-pink group-hover:text-pink-300">LIVE → ENTER</span>
+              </div>
+            </Link>
           </div>
         </div>
 
