@@ -319,7 +319,10 @@ async function classicalOptimization(points: RoutePoint[], constraints: any) {
   
   return {
     optimizedRoute: [...points].sort(() => Math.random() - 0.5),
-    processingTime: 2.0 + Math.random() * 3.0
+    processingTime: 2.0 + Math.random() * 3.0,
+    entanglementLevel: 0, // Classical algorithms don't use quantum entanglement
+    coherenceLevel: 0, // Classical algorithms don't use quantum coherence
+    quantumScore: 0
   };
 }
 
@@ -330,7 +333,10 @@ async function hybridOptimization(points: RoutePoint[], constraints: any) {
   return {
     optimizedRoute: [...points].sort(() => Math.random() - 0.5),
     processingTime: 1.0 + Math.random() * 2.0,
-    hybridAdvantage: Math.random() * 10 + 5
+    hybridAdvantage: Math.random() * 10 + 5,
+    entanglementLevel: Math.random() * 0.3, // Partial quantum entanglement in hybrid
+    coherenceLevel: Math.random() * 0.4, // Partial quantum coherence in hybrid
+    quantumScore: Math.random() * 200 + 100
   };
 }
 
