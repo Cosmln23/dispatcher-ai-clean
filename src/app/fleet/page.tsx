@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 import { HolographicText, GlitchText } from '@/components/effects/MatrixRain';
 
 interface Vehicle {
@@ -217,181 +218,185 @@ export default function FleetManagement() {
     .reduce((sum, v) => sum + (v.battery || 0), 0) / fleet.filter(v => v.battery !== undefined).length;
 
   return (
-    <div className="min-h-screen bg-black text-matrix-500 p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-4xl font-neural font-bold holographic-text">
-            FLEET MANAGEMENT
-          </h1>
-          <p className="text-matrix-400 font-cyber mt-2">
-            Neural Transport Vehicle Control System
-          </p>
-        </div>
-        
-        <Link href="/" className="quantum-btn">
-          ← BACK TO MATRIX
-        </Link>
-      </div>
-
-      {/* Fleet Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="neural-card p-6 text-center">
-          <div className="text-3xl mb-2">🚛</div>
-          <h3 className="text-lg font-neural text-matrix-300">Total Fleet</h3>
-          <div className="text-2xl font-bold holographic-text">{fleet.length}</div>
-        </div>
-        
-        <div className="neural-card p-6 text-center">
-          <div className="text-3xl mb-2">⚡</div>
-          <h3 className="text-lg font-neural text-matrix-300">Active Vehicles</h3>
-          <div className="text-2xl font-bold text-matrix-500">{activeVehicles}</div>
-        </div>
-        
-        <div className="neural-card p-6 text-center">
-          <div className="text-3xl mb-2">🔋</div>
-          <h3 className="text-lg font-neural text-matrix-300">Avg Battery</h3>
-          <div className="text-2xl font-bold text-cyber-cyan">{averageBattery.toFixed(0)}%</div>
-        </div>
-        
-        <div className="neural-card p-6 text-center">
-          <div className="text-3xl mb-2">📊</div>
-          <h3 className="text-lg font-neural text-matrix-300">Fleet Efficiency</h3>
-          <div className="text-2xl font-bold text-cyber-purple">{metrics.efficiency}%</div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Vehicle List */}
-        <div className="lg:col-span-2">
-          <h2 className="text-2xl font-neural text-matrix-300 mb-6 uppercase tracking-wider">
-            <GlitchText intensity="low">VEHICLE STATUS</GlitchText>
-          </h2>
+    <div className="min-h-screen bg-black text-matrix-500">
+      <Navbar />
+      
+      <div className="p-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-4xl font-neural font-bold holographic-text">
+              FLEET MANAGEMENT
+            </h1>
+            <p className="text-matrix-400 font-cyber mt-2">
+              Neural Transport Vehicle Control System
+            </p>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {fleet.map((vehicle) => (
-              <VehicleCard
-                key={vehicle.id}
-                vehicle={vehicle}
-                onDispatch={handleDispatch}
-              />
-            ))}
+          <Link href="/marketplace" className="quantum-btn">
+            📦 Marketplace
+          </Link>
+        </div>
+
+        {/* Fleet Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="neural-card p-6 text-center">
+            <div className="text-3xl mb-2">🚛</div>
+            <h3 className="text-lg font-neural text-matrix-300">Total Fleet</h3>
+            <div className="text-2xl font-bold holographic-text">{fleet.length}</div>
+          </div>
+          
+          <div className="neural-card p-6 text-center">
+            <div className="text-3xl mb-2">⚡</div>
+            <h3 className="text-lg font-neural text-matrix-300">Active Vehicles</h3>
+            <div className="text-2xl font-bold text-matrix-500">{activeVehicles}</div>
+          </div>
+          
+          <div className="neural-card p-6 text-center">
+            <div className="text-3xl mb-2">🔋</div>
+            <h3 className="text-lg font-neural text-matrix-300">Avg Battery</h3>
+            <div className="text-2xl font-bold text-cyber-cyan">{averageBattery.toFixed(0)}%</div>
+          </div>
+          
+          <div className="neural-card p-6 text-center">
+            <div className="text-3xl mb-2">📊</div>
+            <h3 className="text-lg font-neural text-matrix-300">Fleet Efficiency</h3>
+            <div className="text-2xl font-bold text-cyber-purple">{metrics.efficiency}%</div>
           </div>
         </div>
 
-        {/* Control Panel */}
-        <div className="lg:col-span-1 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* Fleet Actions */}
-          <div className="neural-card p-6">
-            <h3 className="text-xl font-neural text-matrix-300 mb-4 uppercase tracking-wider">
-              FLEET OPERATIONS
-            </h3>
+          {/* Vehicle List */}
+          <div className="lg:col-span-2">
+            <h2 className="text-2xl font-neural text-matrix-300 mb-6 uppercase tracking-wider">
+              <GlitchText intensity="low">VEHICLE STATUS</GlitchText>
+            </h2>
             
-            <div className="space-y-3">
-              <Link href="/quantum" className="quantum-btn w-full text-center py-3">
-                ⚡ QUANTUM ROUTE OPTIMIZATION
-              </Link>
-              
-              <button className="quantum-btn w-full text-center py-3">
-                🎯 AUTO-DISPATCH ALL
-              </button>
-              
-              <button className="quantum-btn w-full text-center py-3">
-                🔄 SYNCHRONIZE FLEET
-              </button>
-              
-              <button className="quantum-btn w-full text-center py-3">
-                📊 GENERATE REPORT
-              </button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {fleet.map((vehicle) => (
+                <VehicleCard
+                  key={vehicle.id}
+                  vehicle={vehicle}
+                  onDispatch={handleDispatch}
+                />
+              ))}
             </div>
           </div>
 
-          {/* Fleet Status */}
-          <div className="neural-card p-6">
-            <h3 className="text-xl font-neural text-matrix-300 mb-4 uppercase tracking-wider">
-              SYSTEM STATUS
-            </h3>
+          {/* Control Panel */}
+          <div className="lg:col-span-1 space-y-6">
             
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-matrix-400 font-cyber">Fleet Utilization</span>
-                <span className="text-matrix-500 font-bold">{metrics.utilization}%</span>
-              </div>
+            {/* Fleet Actions */}
+            <div className="neural-card p-6">
+              <h3 className="text-xl font-neural text-matrix-300 mb-4 uppercase tracking-wider">
+                FLEET OPERATIONS
+              </h3>
               
-              <div className="w-full bg-dark-matrix rounded-full h-2">
-                <div 
-                  className="h-2 rounded-full bg-gradient-to-r from-matrix-500 to-cyber-cyan transition-all duration-1000"
-                  style={{ width: `${metrics.utilization}%` }}
-                />
+              <div className="space-y-3">
+                <Link href="/quantum" className="quantum-btn w-full text-center py-3">
+                  ⚡ QUANTUM ROUTE OPTIMIZATION
+                </Link>
+                
+                <button className="quantum-btn w-full text-center py-3">
+                  🎯 AUTO-DISPATCH ALL
+                </button>
+                
+                <button className="quantum-btn w-full text-center py-3">
+                  🔄 SYNCHRONIZE FLEET
+                </button>
+                
+                <button className="quantum-btn w-full text-center py-3">
+                  📊 GENERATE REPORT
+                </button>
               </div>
+            </div>
+
+            {/* Fleet Status */}
+            <div className="neural-card p-6">
+              <h3 className="text-xl font-neural text-matrix-300 mb-4 uppercase tracking-wider">
+                SYSTEM STATUS
+              </h3>
               
-              <div className="grid grid-cols-2 gap-4 mt-4 text-sm">
-                <div className="bg-dark-matrix p-3 rounded">
-                  <div className="text-matrix-400">Active Routes</div>
-                  <div className="text-matrix-500 text-lg font-bold">12</div>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-matrix-400 font-cyber">Fleet Utilization</span>
+                  <span className="text-matrix-500 font-bold">{metrics.utilization}%</span>
                 </div>
                 
-                <div className="bg-dark-matrix p-3 rounded">
-                  <div className="text-matrix-400">Pending Orders</div>
-                  <div className="text-cyber-cyan text-lg font-bold">7</div>
+                <div className="w-full bg-dark-matrix rounded-full h-2">
+                  <div 
+                    className="h-2 rounded-full bg-gradient-to-r from-matrix-500 to-cyber-cyan transition-all duration-1000"
+                    style={{ width: `${metrics.utilization}%` }}
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4 mt-4 text-sm">
+                  <div className="bg-dark-matrix p-3 rounded">
+                    <div className="text-matrix-400">Active Routes</div>
+                    <div className="text-matrix-500 text-lg font-bold">12</div>
+                  </div>
+                  
+                  <div className="bg-dark-matrix p-3 rounded">
+                    <div className="text-matrix-400">Pending Orders</div>
+                    <div className="text-cyber-cyan text-lg font-bold">7</div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Quick Stats */}
-          <div className="neural-card p-6">
-            <h3 className="text-xl font-neural text-matrix-300 mb-4 uppercase tracking-wider">
-              PERFORMANCE METRICS
-            </h3>
-            
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-matrix-400 font-cyber">Deliveries Today</span>
-                <span className="text-matrix-500 font-bold">47</span>
-              </div>
+            {/* Quick Stats */}
+            <div className="neural-card p-6">
+              <h3 className="text-xl font-neural text-matrix-300 mb-4 uppercase tracking-wider">
+                PERFORMANCE METRICS
+              </h3>
               
-              <div className="flex justify-between">
-                <span className="text-matrix-400 font-cyber">Fuel Savings</span>
-                <span className="text-cyber-cyan font-bold">23.4%</span>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="text-matrix-400 font-cyber">On-Time Rate</span>
-                <span className="text-cyber-purple font-bold">96.8%</span>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="text-matrix-400 font-cyber">Customer Satisfaction</span>
-                <span className="text-cyber-yellow font-bold">4.9/5</span>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-matrix-400 font-cyber">Deliveries Today</span>
+                  <span className="text-matrix-500 font-bold">47</span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="text-matrix-400 font-cyber">Fuel Savings</span>
+                  <span className="text-cyber-cyan font-bold">23.4%</span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="text-matrix-400 font-cyber">On-Time Rate</span>
+                  <span className="text-cyber-purple font-bold">96.8%</span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="text-matrix-400 font-cyber">Customer Satisfaction</span>
+                  <span className="text-cyber-yellow font-bold">4.9/5</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Navigation */}
-          <div className="neural-card p-6">
-            <h3 className="text-xl font-neural text-matrix-300 mb-4 uppercase tracking-wider">
-              QUICK ACCESS
-            </h3>
-            
-            <div className="grid grid-cols-2 gap-3">
-              <Link href="/dashboard" className="quantum-btn text-center p-3 text-sm">
-                🧠<br/>Dashboard
-              </Link>
+            {/* Navigation */}
+            <div className="neural-card p-6">
+              <h3 className="text-xl font-neural text-matrix-300 mb-4 uppercase tracking-wider">
+                QUICK ACCESS
+              </h3>
               
-              <Link href="/agents" className="quantum-btn text-center p-3 text-sm">
-                🤖<br/>AI Agents
-              </Link>
-              
-              <button className="quantum-btn text-center p-3 text-sm">
-                📱<br/>Mobile App
-              </button>
-              
-              <button className="quantum-btn text-center p-3 text-sm">
-                ⚙️<br/>Settings
-              </button>
+              <div className="grid grid-cols-2 gap-3">
+                <Link href="/dashboard" className="quantum-btn text-center p-3 text-sm">
+                  🧠<br/>Dashboard
+                </Link>
+                
+                <Link href="/agents" className="quantum-btn text-center p-3 text-sm">
+                  🤖<br/>AI Agents
+                </Link>
+                
+                <button className="quantum-btn text-center p-3 text-sm">
+                  📱<br/>Mobile App
+                </button>
+                
+                <button className="quantum-btn text-center p-3 text-sm">
+                  ⚙️<br/>Settings
+                </button>
+              </div>
             </div>
           </div>
         </div>

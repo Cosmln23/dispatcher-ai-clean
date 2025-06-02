@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 import { HolographicText, GlitchText } from '@/components/effects/MatrixRain';
 
 interface AIAgent {
@@ -17,6 +18,7 @@ interface AIAgent {
   accuracy: number;
   learningRate: number;
   lastUpdate: Date;
+  learningProgress: number;
 }
 
 const generateMockAgents = (): AIAgent[] => [
@@ -32,7 +34,8 @@ const generateMockAgents = (): AIAgent[] => [
     tasksCompleted: 15847,
     accuracy: 98.9,
     learningRate: 0.847,
-    lastUpdate: new Date(Date.now() - 3000)
+    lastUpdate: new Date(Date.now() - 3000),
+    learningProgress: 0
   },
   {
     id: 'NEXUS',
@@ -46,7 +49,8 @@ const generateMockAgents = (): AIAgent[] => [
     tasksCompleted: 12934,
     accuracy: 97.4,
     learningRate: 0.923,
-    lastUpdate: new Date(Date.now() - 1500)
+    lastUpdate: new Date(Date.now() - 1500),
+    learningProgress: 0
   },
   {
     id: 'SIGMA',
@@ -60,7 +64,8 @@ const generateMockAgents = (): AIAgent[] => [
     tasksCompleted: 8765,
     accuracy: 99.2,
     learningRate: 0.756,
-    lastUpdate: new Date(Date.now() - 7000)
+    lastUpdate: new Date(Date.now() - 7000),
+    learningProgress: 0
   },
   {
     id: 'NOVA',
@@ -74,7 +79,8 @@ const generateMockAgents = (): AIAgent[] => [
     tasksCompleted: 5432,
     accuracy: 89.7,
     learningRate: 1.234,
-    lastUpdate: new Date(Date.now() - 25000)
+    lastUpdate: new Date(Date.now() - 25000),
+    learningProgress: 0
   },
   {
     id: 'QUBIT',
@@ -88,7 +94,8 @@ const generateMockAgents = (): AIAgent[] => [
     tasksCompleted: 3247,
     accuracy: 99.8,
     learningRate: 0.634,
-    lastUpdate: new Date(Date.now() - 900)
+    lastUpdate: new Date(Date.now() - 900),
+    learningProgress: 0
   }
 ];
 
@@ -235,11 +242,15 @@ const AgentCard = ({ agent, onOptimize, onTrain }: {
 
 export default function AIAgents() {
   const [agents, setAgents] = useState<AIAgent[]>(generateMockAgents());
+  const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [systemMetrics, setSystemMetrics] = useState({
-    totalProcessingPower: 0,
-    averagePerformance: 0,
-    activeAgents: 0,
-    totalTasks: 0
+    totalProcessingPower: 12.7,
+    neuralConnections: 1247892,
+    learningRate: 94.2,
+    aiCoherence: 97.8,
+    activeAgents: 5,
+    averagePerformance: 94.2,
+    totalTasks: 1247
   });
   const [isClient, setIsClient] = useState(false);
 
@@ -248,248 +259,224 @@ export default function AIAgents() {
     setIsClient(true);
   }, []);
 
-  // Update agents data only on client-side
+  // Update agents and metrics only on client-side
   useEffect(() => {
     if (!isClient) return;
     
     const interval = setInterval(() => {
       setAgents(prev => prev.map(agent => ({
         ...agent,
-        performance: Math.max(70, Math.min(100, agent.performance + (Math.random() - 0.5) * 2)),
-        processingPower: Math.max(40, Math.min(100, agent.processingPower + (Math.random() - 0.5) * 5)),
-        memoryUsage: Math.max(20, Math.min(95, agent.memoryUsage + (Math.random() - 0.5) * 3)),
-        accuracy: Math.max(85, Math.min(100, agent.accuracy + (Math.random() - 0.5) * 0.5)),
-        tasksCompleted: agent.tasksCompleted + Math.floor(Math.random() * 3),
-        lastUpdate: Math.random() > 0.7 ? new Date() : agent.lastUpdate
+        performance: Math.max(60, Math.min(100, agent.performance + (Math.random() - 0.5) * 3)),
+        learningProgress: Math.max(0, Math.min(100, agent.learningProgress + (Math.random() * 2))),
+        tasksCompleted: agent.tasksCompleted + Math.floor(Math.random() * 3)
       })));
+      
+      setSystemMetrics(prev => ({
+        ...prev,
+        totalProcessingPower: Math.max(10, Math.min(15, prev.totalProcessingPower + (Math.random() - 0.5) * 0.5)),
+        neuralConnections: prev.neuralConnections + Math.floor(Math.random() * 1000),
+        learningRate: Math.max(90, Math.min(100, prev.learningRate + (Math.random() - 0.5) * 2)),
+        aiCoherence: Math.max(95, Math.min(100, prev.aiCoherence + (Math.random() - 0.5) * 1))
+      }));
     }, 4000);
     
     return () => clearInterval(interval);
   }, [isClient]);
 
+  // Calculate derived metrics from agents
   useEffect(() => {
-    const totalProcessingPower = agents.reduce((sum, agent) => sum + agent.processingPower, 0);
-    const averagePerformance = agents.reduce((sum, agent) => sum + agent.performance, 0) / agents.length;
     const activeAgents = agents.filter(agent => agent.status === 'online' || agent.status === 'processing').length;
+    const averagePerformance = agents.reduce((sum, agent) => sum + agent.performance, 0) / agents.length;
     const totalTasks = agents.reduce((sum, agent) => sum + agent.tasksCompleted, 0);
     
-    setSystemMetrics({
-      totalProcessingPower,
-      averagePerformance,
+    setSystemMetrics(prev => ({
+      ...prev,
       activeAgents,
+      averagePerformance,
       totalTasks
-    });
+    }));
   }, [agents]);
 
-  const handleOptimize = async (agentId: string) => {
-    console.log(`Optimizing agent ${agentId}`);
-    // Simulate optimization
+  const handleTraining = (agentId: string) => {
+    console.log(`Starting training for agent ${agentId}`);
     setAgents(prev => prev.map(agent => 
       agent.id === agentId 
-        ? { ...agent, status: 'processing' as const, lastUpdate: new Date() }
+        ? { ...agent, status: 'training', learningProgress: 0 }
         : agent
     ));
-    
-    setTimeout(() => {
-      setAgents(prev => prev.map(agent => 
-        agent.id === agentId 
-          ? { 
-              ...agent, 
-              status: 'online' as const, 
-              performance: Math.min(100, agent.performance + 5),
-              lastUpdate: new Date()
-            }
-          : agent
-      ));
-    }, 3000);
   };
 
-  const handleTrain = async (agentId: string) => {
-    console.log(`Training agent ${agentId}`);
-    setAgents(prev => prev.map(agent => 
-      agent.id === agentId 
-        ? { ...agent, status: 'training' as const, lastUpdate: new Date() }
-        : agent
-    ));
-    
-    setTimeout(() => {
-      setAgents(prev => prev.map(agent => 
-        agent.id === agentId 
-          ? { 
-              ...agent, 
-              status: 'online' as const,
-              accuracy: Math.min(100, agent.accuracy + 2),
-              learningRate: agent.learningRate * 1.1,
-              lastUpdate: new Date()
-            }
-          : agent
-      ));
-    }, 8000);
+  const handleOptimize = (agentId: string) => {
+    console.log(`Optimizing agent ${agentId}`);
   };
 
   return (
-    <div className="min-h-screen bg-black text-matrix-500 p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-4xl font-neural font-bold holographic-text">
-            AI AGENTS CONTROL
-          </h1>
-          <p className="text-matrix-400 font-cyber mt-2">
-            Neural Network Management & Control Center
-          </p>
-        </div>
-        
-        <Link href="/" className="quantum-btn">
-          ← BACK TO MATRIX
-        </Link>
-      </div>
-
-      {/* System Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="neural-card p-6 text-center">
-          <div className="text-3xl mb-2">🤖</div>
-          <h3 className="text-lg font-neural text-matrix-300">Active Agents</h3>
-          <div className="text-2xl font-bold holographic-text">{systemMetrics.activeAgents}</div>
-        </div>
-        
-        <div className="neural-card p-6 text-center">
-          <div className="text-3xl mb-2">⚡</div>
-          <h3 className="text-lg font-neural text-matrix-300">Avg Performance</h3>
-          <div className="text-2xl font-bold text-matrix-500">{systemMetrics.averagePerformance.toFixed(1)}%</div>
-        </div>
-        
-        <div className="neural-card p-6 text-center">
-          <div className="text-3xl mb-2">🧠</div>
-          <h3 className="text-lg font-neural text-matrix-300">Processing Power</h3>
-          <div className="text-2xl font-bold text-cyber-cyan">{systemMetrics.totalProcessingPower.toFixed(0)}%</div>
-        </div>
-        
-        <div className="neural-card p-6 text-center">
-          <div className="text-3xl mb-2">📊</div>
-          <h3 className="text-lg font-neural text-matrix-300">Total Tasks</h3>
-          <div className="text-2xl font-bold text-cyber-purple">{systemMetrics.totalTasks.toLocaleString()}</div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* AI Agents */}
-        <div className="lg:col-span-2">
-          <h2 className="text-2xl font-neural text-matrix-300 mb-6 uppercase tracking-wider">
-            <GlitchText intensity="low">NEURAL AGENTS STATUS</GlitchText>
-          </h2>
+    <div className="min-h-screen bg-black text-matrix-500">
+      <Navbar />
+      
+      <div className="p-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-4xl font-neural font-bold holographic-text">
+              AI AGENTS CONTROL
+            </h1>
+            <p className="text-matrix-400 font-cyber mt-2">
+              Advanced Artificial Intelligence Management System
+            </p>
+          </div>
           
-          {agents.map((agent) => (
-            <AgentCard
-              key={agent.id}
-              agent={agent}
-              onOptimize={handleOptimize}
-              onTrain={handleTrain}
-            />
-          ))}
+          <Link href="/marketplace" className="quantum-btn">
+            📦 Marketplace
+          </Link>
         </div>
 
-        {/* Control Panel */}
-        <div className="lg:col-span-1 space-y-6">
+        {/* System Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="neural-card p-6 text-center">
+            <div className="text-3xl mb-2">🤖</div>
+            <h3 className="text-lg font-neural text-matrix-300">Active Agents</h3>
+            <div className="text-2xl font-bold holographic-text">{systemMetrics.activeAgents}</div>
+          </div>
           
-          {/* System Actions */}
-          <div className="neural-card p-6">
-            <h3 className="text-xl font-neural text-matrix-300 mb-4 uppercase tracking-wider">
-              SYSTEM OPERATIONS
-            </h3>
+          <div className="neural-card p-6 text-center">
+            <div className="text-3xl mb-2">⚡</div>
+            <h3 className="text-lg font-neural text-matrix-300">Avg Performance</h3>
+            <div className="text-2xl font-bold text-matrix-500">{systemMetrics.averagePerformance.toFixed(1)}%</div>
+          </div>
+          
+          <div className="neural-card p-6 text-center">
+            <div className="text-3xl mb-2">🧠</div>
+            <h3 className="text-lg font-neural text-matrix-300">Processing Power</h3>
+            <div className="text-2xl font-bold text-cyber-cyan">{systemMetrics.totalProcessingPower.toFixed(0)}%</div>
+          </div>
+          
+          <div className="neural-card p-6 text-center">
+            <div className="text-3xl mb-2">📊</div>
+            <h3 className="text-lg font-neural text-matrix-300">Total Tasks</h3>
+            <div className="text-2xl font-bold text-cyber-purple">{systemMetrics.totalTasks.toLocaleString()}</div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          {/* AI Agents */}
+          <div className="lg:col-span-2">
+            <h2 className="text-2xl font-neural text-matrix-300 mb-6 uppercase tracking-wider">
+              <GlitchText intensity="low">NEURAL AGENTS STATUS</GlitchText>
+            </h2>
             
-            <div className="space-y-3">
-              <button className="quantum-btn w-full text-center py-3">
-                🧠 SYNCHRONIZE ALL AGENTS
-              </button>
-              
-              <button className="quantum-btn w-full text-center py-3">
-                ⚡ BOOST PERFORMANCE
-              </button>
-              
-              <button className="quantum-btn w-full text-center py-3">
-                🎯 AUTO-OPTIMIZE
-              </button>
-              
-              <button className="quantum-btn w-full text-center py-3">
-                📊 GENERATE ANALYTICS
-              </button>
-            </div>
+            {agents.map((agent) => (
+              <AgentCard
+                key={agent.id}
+                agent={agent}
+                onOptimize={handleOptimize}
+                onTrain={handleTraining}
+              />
+            ))}
           </div>
 
-          {/* System Status */}
-          <div className="neural-card p-6">
-            <h3 className="text-xl font-neural text-matrix-300 mb-4 uppercase tracking-wider">
-              NEURAL NETWORK STATUS
-            </h3>
+          {/* Control Panel */}
+          <div className="lg:col-span-1 space-y-6">
             
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-matrix-400 font-cyber">Network Coherence</span>
-                <span className="text-matrix-500 font-bold">96.7%</span>
-              </div>
+            {/* System Actions */}
+            <div className="neural-card p-6">
+              <h3 className="text-xl font-neural text-matrix-300 mb-4 uppercase tracking-wider">
+                SYSTEM OPERATIONS
+              </h3>
               
-              <div className="w-full bg-dark-matrix rounded-full h-2">
-                <div className="h-2 rounded-full bg-gradient-to-r from-matrix-500 to-cyber-cyan w-[97%] transition-all duration-1000" />
+              <div className="space-y-3">
+                <button className="quantum-btn w-full text-center py-3">
+                  🧠 SYNCHRONIZE ALL AGENTS
+                </button>
+                
+                <button className="quantum-btn w-full text-center py-3">
+                  ⚡ BOOST PERFORMANCE
+                </button>
+                
+                <button className="quantum-btn w-full text-center py-3">
+                  🎯 AUTO-OPTIMIZE
+                </button>
+                
+                <button className="quantum-btn w-full text-center py-3">
+                  📊 GENERATE ANALYTICS
+                </button>
               </div>
+            </div>
+
+            {/* System Status */}
+            <div className="neural-card p-6">
+              <h3 className="text-xl font-neural text-matrix-300 mb-4 uppercase tracking-wider">
+                NEURAL NETWORK STATUS
+              </h3>
               
-              <div className="grid grid-cols-1 gap-3 mt-4 text-sm">
-                <div className="bg-dark-matrix p-3 rounded">
-                  <div className="text-matrix-400">Learning Rate</div>
-                  <div className="text-matrix-500 text-lg font-bold">0.847</div>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-matrix-400 font-cyber">Network Coherence</span>
+                  <span className="text-matrix-500 font-bold">96.7%</span>
                 </div>
                 
-                <div className="bg-dark-matrix p-3 rounded">
-                  <div className="text-matrix-400">Data Processed</div>
-                  <div className="text-cyber-cyan text-lg font-bold">2.3TB</div>
+                <div className="w-full bg-dark-matrix rounded-full h-2">
+                  <div className="h-2 rounded-full bg-gradient-to-r from-matrix-500 to-cyber-cyan w-[97%] transition-all duration-1000" />
                 </div>
                 
-                <div className="bg-dark-matrix p-3 rounded">
-                  <div className="text-matrix-400">Uptime</div>
-                  <div className="text-cyber-purple text-lg font-bold">99.8%</div>
+                <div className="grid grid-cols-1 gap-3 mt-4 text-sm">
+                  <div className="bg-dark-matrix p-3 rounded">
+                    <div className="text-matrix-400">Learning Rate</div>
+                    <div className="text-matrix-500 text-lg font-bold">0.847</div>
+                  </div>
+                  
+                  <div className="bg-dark-matrix p-3 rounded">
+                    <div className="text-matrix-400">Data Processed</div>
+                    <div className="text-cyber-cyan text-lg font-bold">2.3TB</div>
+                  </div>
+                  
+                  <div className="bg-dark-matrix p-3 rounded">
+                    <div className="text-matrix-400">Uptime</div>
+                    <div className="text-cyber-purple text-lg font-bold">99.8%</div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Quick Navigation */}
-          <div className="neural-card p-6">
-            <h3 className="text-xl font-neural text-matrix-300 mb-4 uppercase tracking-wider">
-              QUICK ACCESS
-            </h3>
-            
-            <div className="grid grid-cols-2 gap-3">
-              <Link href="/dashboard" className="quantum-btn text-center p-3 text-sm">
-                🧠<br/>Dashboard
-              </Link>
+            {/* Quick Navigation */}
+            <div className="neural-card p-6">
+              <h3 className="text-xl font-neural text-matrix-300 mb-4 uppercase tracking-wider">
+                QUICK ACCESS
+              </h3>
               
-              <Link href="/quantum" className="quantum-btn text-center p-3 text-sm">
-                ⚡<br/>Quantum
-              </Link>
-              
-              <Link href="/fleet" className="quantum-btn text-center p-3 text-sm">
-                🚛<br/>Fleet
-              </Link>
-              
-              <button className="quantum-btn text-center p-3 text-sm">
-                ⚙️<br/>Settings
-              </button>
+              <div className="grid grid-cols-2 gap-3">
+                <Link href="/dashboard" className="quantum-btn text-center p-3 text-sm">
+                  🧠<br/>Dashboard
+                </Link>
+                
+                <Link href="/quantum" className="quantum-btn text-center p-3 text-sm">
+                  ⚡<br/>Quantum
+                </Link>
+                
+                <Link href="/fleet" className="quantum-btn text-center p-3 text-sm">
+                  🚛<br/>Fleet
+                </Link>
+                
+                <button className="quantum-btn text-center p-3 text-sm">
+                  ⚙️<br/>Settings
+                </button>
+              </div>
             </div>
-          </div>
 
-          {/* Real-time Logs */}
-          <div className="neural-card p-6">
-            <h3 className="text-xl font-neural text-matrix-300 mb-4 uppercase tracking-wider">
-              ACTIVITY LOG
-            </h3>
-            
-            <div className="space-y-2 max-h-40 overflow-y-auto font-cyber text-xs">
-              <div className="text-matrix-400">[{isClient ? new Date().toLocaleTimeString() : '--:--:--'}] ARIA: Route optimization completed</div>
-              <div className="text-cyber-cyan">[{isClient ? new Date(Date.now() - 15000).toLocaleTimeString() : '--:--:--'}] NEXUS: Fleet coordination updated</div>
-              <div className="text-cyber-purple">[{isClient ? new Date(Date.now() - 32000).toLocaleTimeString() : '--:--:--'}] SIGMA: Analytics model refreshed</div>
-              <div className="text-cyber-yellow">[{isClient ? new Date(Date.now() - 47000).toLocaleTimeString() : '--:--:--'}] NOVA: Voice training in progress</div>
-              <div className="text-matrix-400">[{isClient ? new Date(Date.now() - 63000).toLocaleTimeString() : '--:--:--'}] QUBIT: Quantum processing optimized</div>
+            {/* Real-time Logs */}
+            <div className="neural-card p-6">
+              <h3 className="text-xl font-neural text-matrix-300 mb-4 uppercase tracking-wider">
+                ACTIVITY LOG
+              </h3>
+              
+              <div className="space-y-2 max-h-40 overflow-y-auto font-cyber text-xs">
+                <div className="text-matrix-400">[{isClient ? new Date().toLocaleTimeString() : '--:--:--'}] ARIA: Route optimization completed</div>
+                <div className="text-cyber-cyan">[{isClient ? new Date(Date.now() - 15000).toLocaleTimeString() : '--:--:--'}] NEXUS: Fleet coordination updated</div>
+                <div className="text-cyber-purple">[{isClient ? new Date(Date.now() - 32000).toLocaleTimeString() : '--:--:--'}] SIGMA: Analytics model refreshed</div>
+                <div className="text-cyber-yellow">[{isClient ? new Date(Date.now() - 47000).toLocaleTimeString() : '--:--:--'}] NOVA: Voice training in progress</div>
+                <div className="text-matrix-400">[{isClient ? new Date(Date.now() - 63000).toLocaleTimeString() : '--:--:--'}] QUBIT: Quantum processing optimized</div>
+              </div>
             </div>
           </div>
         </div>

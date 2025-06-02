@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 import { useNeural, useNeuralMetrics, useAIAgents } from '@/lib/providers/neural-provider';
 import { HolographicText, GlitchText } from '@/components/effects/MatrixRain';
 
@@ -184,127 +185,138 @@ export default function ComingSoon() {
   }, [isClient]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-matrix-500 p-6">
-      <div className="text-center space-y-8 max-w-4xl">
-        
-        {/* Matrix Rain Effect */}
-        <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-          <div className="matrix-text text-xs">{matrixText}</div>
-        </div>
+    <div className="min-h-screen bg-black text-matrix-500">
+      <Navbar />
+      
+      <div className="flex items-center justify-center min-h-[calc(100vh-64px)] p-6">
+        <div className="text-center space-y-8 max-w-4xl">
+          
+          {/* Matrix Rain Effect */}
+          <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+            <div className="matrix-text text-xs">{matrixText}</div>
+          </div>
 
-        {/* Main Logo */}
-        <div className="relative z-10">
-          <h1 className="text-6xl md:text-8xl font-neural font-bold mb-4">
-            <span className="holographic-text">DISPATCHER AI</span>
-          </h1>
-          
-          <div className="text-2xl md:text-3xl font-cyber text-cyber-cyan mb-8">
-            🚛 Neural Transport System 2030 🚛
-          </div>
-        </div>
-
-        {/* Status Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="neural-card p-6">
-            <div className="text-4xl mb-3">🧠</div>
-            <h3 className="text-lg font-neural text-matrix-300">AGI SYSTEM</h3>
-            <p className="text-matrix-500 font-cyber">ONLINE</p>
-          </div>
-          
-          <div className="neural-card p-6">
-            <div className="text-4xl mb-3">⚡</div>
-            <h3 className="text-lg font-neural text-matrix-300">QUANTUM CORE</h3>
-            <p className="text-cyber-purple font-cyber">ACTIVE</p>
-          </div>
-          
-          <div className="neural-card p-6">
-            <div className="text-4xl mb-3">🚀</div>
-            <h3 className="text-lg font-neural text-matrix-300">LAUNCH STATUS</h3>
-            <p className="text-cyber-yellow font-cyber">INITIALIZING</p>
-          </div>
-        </div>
-
-        {/* Main Message */}
-        <div className="neural-card p-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-neural mb-6 text-matrix-300">
-            LAUNCH SEQUENCE INITIATED
-          </h2>
-          
-          <p className="text-xl text-matrix-400 mb-6 font-cyber">
-            Sistemul de transport futurist cu AGI este acum LIVE!
-          </p>
-          
-          <div className="space-y-4 text-lg">
-            <Link href="/dashboard" className="block">
-              <div className="flex items-center justify-between p-3 bg-dark-matrix rounded hover:bg-matrix-500/10 transition-all cursor-pointer group">
-                <span className="font-cyber text-matrix-400 group-hover:text-matrix-300">✅ Neural Dashboard</span>
-                <span className="text-matrix-500 group-hover:text-matrix-400">READY → ENTER</span>
-              </div>
-            </Link>
+          {/* Main Logo */}
+          <div className="relative z-10">
+            <h1 className="text-6xl md:text-8xl font-neural font-bold mb-4">
+              <span className="holographic-text">DISPATCHER AI</span>
+            </h1>
             
-            <Link href="/quantum" className="block">
-              <div className="flex items-center justify-between p-3 bg-dark-matrix rounded hover:bg-cyber-purple/10 transition-all cursor-pointer group">
-                <span className="font-cyber text-matrix-400 group-hover:text-cyber-purple">⚡ Quantum Optimization</span>
-                <span className="text-cyber-yellow group-hover:text-cyber-purple">ACTIVE → ENTER</span>
-              </div>
-            </Link>
+            <div className="text-2xl md:text-3xl font-cyber text-cyber-cyan mb-8">
+              🚛 Neural Transport System 2025 🚛
+            </div>
+          </div>
+
+          {/* Status Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="neural-card p-6">
+              <div className="text-4xl mb-3">🧠</div>
+              <h3 className="text-lg font-neural text-matrix-300">AGI SYSTEM</h3>
+              <p className="text-matrix-500 font-cyber">ONLINE</p>
+            </div>
             
-            <Link href="/fleet" className="block">
-              <div className="flex items-center justify-between p-3 bg-dark-matrix rounded hover:bg-cyber-cyan/10 transition-all cursor-pointer group">
-                <span className="font-cyber text-matrix-400 group-hover:text-cyber-cyan">🚛 Fleet Management</span>
-                <span className="text-cyber-cyan group-hover:text-cyan-300">ONLINE → ENTER</span>
-              </div>
-            </Link>
+            <div className="neural-card p-6">
+              <div className="text-4xl mb-3">⚡</div>
+              <h3 className="text-lg font-neural text-matrix-300">QUANTUM CORE</h3>
+              <p className="text-cyber-purple font-cyber">ACTIVE</p>
+            </div>
             
-            <Link href="/agents" className="block">
-              <div className="flex items-center justify-between p-3 bg-dark-matrix rounded hover:bg-cyber-pink/10 transition-all cursor-pointer group">
-                <span className="font-cyber text-matrix-400 group-hover:text-cyber-pink">🤖 AI Agents Control</span>
-                <span className="text-cyber-pink group-hover:text-pink-300">LIVE → ENTER</span>
-              </div>
-            </Link>
+            <div className="neural-card p-6">
+              <div className="text-4xl mb-3">📦</div>
+              <h3 className="text-lg font-neural text-matrix-300">MARKETPLACE</h3>
+              <p className="text-cyber-yellow font-cyber">LIVE</p>
+            </div>
           </div>
-        </div>
 
-        {/* Features Preview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="neural-card p-4 text-center">
-            <div className="text-2xl mb-2">🎯</div>
-            <h4 className="font-neural text-matrix-300">AGI Dispatcher</h4>
+          {/* Main Message */}
+          <div className="neural-card p-8 text-center">
+            <h2 className="text-3xl md:text-4xl font-neural mb-6 text-matrix-300">
+              PLATFORMA LIVE 2025
+            </h2>
+            
+            <p className="text-xl text-matrix-400 mb-6 font-cyber">
+              Sistemul neural de transport cu marketplace pentru licitații este acum activ!
+            </p>
+            
+            <div className="space-y-4 text-lg">
+              <Link href="/marketplace" className="block">
+                <div className="flex items-center justify-between p-3 bg-dark-matrix rounded hover:bg-matrix-500/10 transition-all cursor-pointer group">
+                  <span className="font-cyber text-matrix-400 group-hover:text-matrix-300">📦 Marketplace Licitații</span>
+                  <span className="text-matrix-500 group-hover:text-matrix-400">LIVE → ENTER</span>
+                </div>
+              </Link>
+              
+              <Link href="/dashboard" className="block">
+                <div className="flex items-center justify-between p-3 bg-dark-matrix rounded hover:bg-matrix-500/10 transition-all cursor-pointer group">
+                  <span className="font-cyber text-matrix-400 group-hover:text-matrix-300">🧠 Neural Dashboard</span>
+                  <span className="text-matrix-500 group-hover:text-matrix-400">READY → ENTER</span>
+                </div>
+              </Link>
+              
+              <Link href="/quantum" className="block">
+                <div className="flex items-center justify-between p-3 bg-dark-matrix rounded hover:bg-cyber-purple/10 transition-all cursor-pointer group">
+                  <span className="font-cyber text-matrix-400 group-hover:text-cyber-purple">⚡ Quantum Routes</span>
+                  <span className="text-cyber-yellow group-hover:text-cyber-purple">ACTIVE → ENTER</span>
+                </div>
+              </Link>
+              
+              <Link href="/fleet" className="block">
+                <div className="flex items-center justify-between p-3 bg-dark-matrix rounded hover:bg-cyber-cyan/10 transition-all cursor-pointer group">
+                  <span className="font-cyber text-matrix-400 group-hover:text-cyber-cyan">🚛 Fleet Management</span>
+                  <span className="text-cyber-cyan group-hover:text-cyan-300">ONLINE → ENTER</span>
+                </div>
+              </Link>
+              
+              <Link href="/agents" className="block">
+                <div className="flex items-center justify-between p-3 bg-dark-matrix rounded hover:bg-cyber-pink/10 transition-all cursor-pointer group">
+                  <span className="font-cyber text-matrix-400 group-hover:text-cyber-pink">🤖 AI Agents Control</span>
+                  <span className="text-cyber-pink group-hover:text-pink-300">LIVE → ENTER</span>
+                </div>
+              </Link>
+            </div>
           </div>
-          
-          <div className="neural-card p-4 text-center">
-            <div className="text-2xl mb-2">🌐</div>
-            <h4 className="font-neural text-matrix-300">Blockchain</h4>
-          </div>
-          
-          <div className="neural-card p-4 text-center">
-            <div className="text-2xl mb-2">🎤</div>
-            <h4 className="font-neural text-matrix-300">Voice Commands</h4>
-          </div>
-          
-          <div className="neural-card p-4 text-center">
-            <div className="text-2xl mb-2">📊</div>
-            <h4 className="font-neural text-matrix-300">Real-time Analytics</h4>
-          </div>
-        </div>
 
-        {/* Footer */}
-        <div className="text-center space-y-4">
-          <div className="text-matrix-400 font-cyber">
-            Current Time: {isClient && currentTime ? currentTime.toLocaleTimeString('ro-RO') : '--:--:--'} • 
-            System Status: <span className="text-matrix-500">OPERATIONAL</span>
+          {/* Features Preview */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="neural-card p-4 text-center">
+              <div className="text-2xl mb-2">📦</div>
+              <h4 className="font-neural text-matrix-300">Marketplace</h4>
+            </div>
+            
+            <div className="neural-card p-4 text-center">
+              <div className="text-2xl mb-2">💰</div>
+              <h4 className="font-neural text-matrix-300">Licitații Live</h4>
+            </div>
+            
+            <div className="neural-card p-4 text-center">
+              <div className="text-2xl mb-2">🚛</div>
+              <h4 className="font-neural text-matrix-300">Transport Rapid</h4>
+            </div>
+            
+            <div className="neural-card p-4 text-center">
+              <div className="text-2xl mb-2">📊</div>
+              <h4 className="font-neural text-matrix-300">AI Analytics</h4>
+            </div>
           </div>
-          
-          <div className="text-sm text-matrix-500 font-cyber">
-            DispatcherAI Neural Transport System v2030.1.0
+
+          {/* Footer */}
+          <div className="text-center space-y-4">
+            <div className="text-matrix-400 font-cyber">
+              Current Time: {isClient && currentTime ? currentTime.toLocaleTimeString('ro-RO') : '--:--:--'} • 
+              System Status: <span className="text-matrix-500">OPERATIONAL</span>
+            </div>
+            
+            <div className="text-sm text-matrix-500 font-cyber">
+              DispatcherAI Neural Transport System v2025.1.0
+            </div>
           </div>
-        </div>
 
-        {/* Loading Animation */}
-        <div className="flex justify-center">
-          <div className="neural-loading"></div>
-        </div>
+          {/* Loading Animation */}
+          <div className="flex justify-center">
+            <div className="neural-loading"></div>
+          </div>
 
+        </div>
       </div>
     </div>
   );
