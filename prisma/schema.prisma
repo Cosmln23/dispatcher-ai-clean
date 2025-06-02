@@ -1,0 +1,357 @@
+// DispatcherAI - Neural Database Schema 2030
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ========== AGI SYSTEM ==========
+model AIAgent {
+  id            String    @id @default(cuid())
+  name          String
+  specialty     AgentType
+  performance   Float     @default(0.0)
+  learningData  Json?     // Neural weights and training data
+  active        Boolean   @default(true)
+  version       String    @default("1.0")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relations
+  decisions     AIDecision[]
+  optimizations QuantumOptimization[]
+}
+
+model AIDecision {
+  id          String   @id @default(cuid())
+  agentId     String
+  context     Json     // Input data
+  decision    Json     // Output/action taken
+  confidence  Float
+  outcome     String?  // Success/failure feedback
+  timestamp   DateTime @default(now())
+  
+  agent       AIAgent  @relation(fields: [agentId], references: [id])
+}
+
+// ========== QUANTUM OPTIMIZATION ==========
+model QuantumOptimization {
+  id          String   @id @default(cuid())
+  agentId     String?
+  problemType String   // route, pricing, fleet, etc.
+  inputData   Json     // Problem parameters
+  solution    Json     // Optimized solution
+  confidence  Float
+  performance Float    // Execution time or quality metric
+  timestamp   DateTime @default(now())
+  
+  agent       AIAgent? @relation(fields: [agentId], references: [id])
+}
+
+// ========== BLOCKCHAIN LEDGER ==========
+model BlockchainTransaction {
+  id          String   @id @default(cuid())
+  txHash      String   @unique
+  orderRefId  String
+  fromAddress String
+  toAddress   String
+  amount      Decimal  @db.Decimal(18, 8)
+  tokenType   String   @default("ETH") // ETH, USDC, custom tokens
+  gasUsed     Int?
+  gasPrice    String?
+  validated   Boolean  @default(false)
+  blockNumber Int?
+  timestamp   DateTime @default(now())
+  
+  order       Order    @relation(fields: [orderRefId], references: [id])
+}
+
+model SmartContract {
+  id          String   @id @default(cuid())
+  address     String   @unique
+  name        String
+  abi         Json
+  bytecode    String?
+  deployed    Boolean  @default(false)
+  network     String   @default("ethereum")
+  version     String
+  createdAt   DateTime @default(now())
+}
+
+// ========== CORE BUSINESS ==========
+model Order {
+  id            String    @id @default(cuid())
+  clientId      String
+  driverId      String?
+  status        OrderStatus @default(PENDING)
+  
+  // Location data
+  pickupLat     Float
+  pickupLng     Float
+  deliveryLat   Float
+  deliveryLng   Float
+  distance      Float?
+  
+  // Cargo info
+  cargoType     String
+  weight        Float
+  volume        Float?
+  specialReqs   String?
+  
+  // Pricing
+  basePrice     Decimal   @db.Decimal(10, 2)
+  finalPrice    Decimal?  @db.Decimal(10, 2)
+  aiOptimized   Boolean   @default(false)
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  scheduledAt   DateTime?
+  completedAt   DateTime?
+  
+  // Relations
+  client        User      @relation("ClientOrders", fields: [clientId], references: [id])
+  driver        User?     @relation("DriverOrders", fields: [driverId], references: [id])
+  route         Route?
+  tracking      TrackingData[]
+  blockchain    BlockchainTransaction[]
+  
+  @@index([status])
+  @@index([clientId])
+  @@index([driverId])
+}
+
+model Route {
+  id            String   @id @default(cuid())
+  orderId       String   @unique
+  waypoints     Json     // Array of lat/lng coordinates
+  optimized     Boolean  @default(false)
+  distance      Float
+  duration      Float    // In minutes
+  traffic       Json?    // Real-time traffic data
+  weather       Json?    // Weather conditions
+  aiGenerated   Boolean  @default(false)
+  quantumOptim  Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  
+  order         Order    @relation(fields: [orderId], references: [id])
+}
+
+// ========== SMART FLEET ==========
+model Vehicle {
+  id              String   @id @default(cuid())
+  driverId        String?
+  plateNumber     String   @unique
+  model           String
+  year            Int
+  capacity        Float    // Max weight in kg
+  fuelType        FuelType @default(DIESEL)
+  autonomous      Boolean  @default(false)
+  
+  // IoT & Sensors
+  iotDeviceId     String?  @unique
+  gpsEnabled      Boolean  @default(true)
+  biometricSensor Boolean  @default(false)
+  
+  // Status
+  status          VehicleStatus @default(IDLE)
+  location        Json?    // Current lat/lng
+  batteryLevel    Float?   // For electric vehicles
+  fuelLevel       Float?
+  
+  // Maintenance
+  lastMaintenance DateTime?
+  nextMaintenance DateTime?
+  mileage         Float    @default(0)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  driver          User?    @relation(fields: [driverId], references: [id])
+  tracking        TrackingData[]
+  maintenance     MaintenancePrediction[]
+}
+
+model TrackingData {
+  id          String   @id @default(cuid())
+  orderId     String?
+  vehicleId   String
+  latitude    Float
+  longitude   Float
+  speed       Float    @default(0)
+  heading     Float?   // Compass direction
+  accuracy    Float?   // GPS accuracy in meters
+  timestamp   DateTime @default(now())
+  
+  // IoT Data
+  fuelLevel   Float?
+  engineTemp  Float?
+  tirePress   Json?    // Array of tire pressures
+  
+  order       Order?   @relation(fields: [orderId], references: [id])
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id])
+  
+  @@index([orderId])
+  @@index([vehicleId])
+  @@index([timestamp])
+}
+
+// ========== BIOMETRIC & SAFETY ==========
+model BiometricData {
+  id          String   @id @default(cuid())
+  driverId    String
+  heartRate   Int?
+  stressLevel Float?   // 0-1 scale
+  fatigue     Float?   // 0-1 scale
+  bloodPres   String?  // "120/80"
+  location    Json?    // lat/lng when measured
+  timestamp   DateTime @default(now())
+  
+  driver      User     @relation(fields: [driverId], references: [id])
+  
+  @@index([driverId])
+  @@index([timestamp])
+}
+
+model SafetyAlert {
+  id          String      @id @default(cuid())
+  driverId    String
+  type        AlertType
+  severity    AlertLevel  @default(MEDIUM)
+  message     String
+  resolved    Boolean     @default(false)
+  timestamp   DateTime    @default(now())
+  
+  driver      User        @relation(fields: [driverId], references: [id])
+}
+
+// ========== PREDICTIVE MAINTENANCE ==========
+model MaintenancePrediction {
+  id            String   @id @default(cuid())
+  vehicleId     String
+  component     String   // Engine, brakes, tires, etc.
+  currentState  Float    // Health score 0-1
+  predicted     DateTime // When maintenance needed
+  confidence    Float    // AI confidence 0-1
+  cost          Decimal? @db.Decimal(10, 2)
+  urgent        Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  
+  vehicle       Vehicle  @relation(fields: [vehicleId], references: [id])
+}
+
+// ========== AI VOICE & COMMANDS ==========
+model VoiceCommand {
+  id          String   @id @default(cuid())
+  userId      String
+  command     String   // Transcribed text
+  intent      String?  // Parsed intent
+  response    String   // AI response
+  confidence  Float
+  processed   Boolean  @default(false)
+  language    String   @default("ro")
+  audioFile   String?  // Storage path
+  timestamp   DateTime @default(now())
+  
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+// ========== USERS & ROLES ==========
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String
+  phone       String?
+  role        UserRole @default(CLIENT)
+  
+  // Authentication
+  passwordHash String?
+  biometricId  String?  @unique
+  walletAddr   String?  // Crypto wallet
+  
+  // Profile
+  avatar      String?
+  language    String   @default("ro")
+  timezone    String   @default("Europe/Bucharest")
+  verified    Boolean  @default(false)
+  
+  // AI Preferences
+  aiEnabled   Boolean  @default(true)
+  voiceEnabled Boolean @default(false)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  clientOrders   Order[] @relation("ClientOrders")
+  driverOrders   Order[] @relation("DriverOrders") 
+  vehicle        Vehicle?
+  biometricData  BiometricData[]
+  safetyAlerts   SafetyAlert[]
+  voiceCommands  VoiceCommand[]
+  
+  @@index([email])
+  @@index([role])
+}
+
+// ========== ENUMS ==========
+enum AgentType {
+  ROUTE_OPTIMIZER
+  PRICE_NEGOTIATOR  
+  RISK_ANALYZER
+  MAINTENANCE_PREDICTOR
+  DRIVER_COACH
+  FLEET_MANAGER
+  QUANTUM_PROCESSOR
+}
+
+enum OrderStatus {
+  PENDING
+  ASSIGNED
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+  DISPUTED
+}
+
+enum VehicleStatus {
+  IDLE
+  IN_TRANSIT
+  MAINTENANCE
+  CHARGING
+  OFFLINE
+}
+
+enum FuelType {
+  DIESEL
+  GASOLINE
+  ELECTRIC
+  HYBRID
+  HYDROGEN
+}
+
+enum UserRole {
+  CLIENT
+  DRIVER
+  DISPATCHER
+  ADMIN
+  AI_AGENT
+}
+
+enum AlertType {
+  FATIGUE
+  SPEEDING
+  HARSH_BRAKING
+  ROUTE_DEVIATION
+  MAINTENANCE_DUE
+  EMERGENCY
+}
+
+enum AlertLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+} 

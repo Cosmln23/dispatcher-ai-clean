@@ -1,0 +1,416 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* DispatcherAI - Global Styles 2030 */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Variables for Matrix Theme */
+@layer base {
+  :root {
+    --background: 0 0% 0%; /* Black space */
+    --foreground: 120 100% 50%; /* Matrix green */
+    --card: 120 100% 4%; /* Dark matrix */
+    --card-foreground: 120 100% 90%;
+    --popover: 120 100% 4%;
+    --popover-foreground: 120 100% 90%;
+    --primary: 120 100% 50%; /* Matrix green */
+    --primary-foreground: 0 0% 0%;
+    --secondary: 180 100% 50%; /* Cyber cyan */
+    --secondary-foreground: 0 0% 0%;
+    --muted: 120 100% 8%;
+    --muted-foreground: 120 20% 65%;
+    --accent: 300 100% 50%; /* Neon pink */
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 100% 50%; /* Laser red */
+    --destructive-foreground: 0 0% 100%;
+    --border: 120 50% 20%;
+    --input: 120 50% 20%;
+    --ring: 120 100% 50%;
+    --chart-1: 120 100% 50%;
+    --chart-2: 180 100% 50%;
+    --chart-3: 300 100% 50%;
+    --chart-4: 60 100% 50%;
+    --chart-5: 0 100% 50%;
+  }
+}
+
+/* Global Futuristic Styles */
+* {
+  border-color: hsl(var(--border));
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #000000;
+  color: #00FF41;
+  font-family: 'Orbitron', 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Matrix Digital Rain Background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 25% 25%, rgba(0, 255, 65, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(0, 255, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(255, 0, 255, 0.03) 0%, transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Scanning Line Effect */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00FF41, transparent);
+  animation: scan-line 3s linear infinite;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #001a00;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00FF41, #00FFFF);
+  border-radius: 4px;
+  box-shadow: 0 0 10px #00FF41;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00FFFF, #FF00FF);
+  box-shadow: 0 0 15px #00FFFF;
+}
+
+/* Selection */
+::selection {
+  background: rgba(0, 255, 65, 0.3);
+  color: #FFFFFF;
+}
+
+/* Holographic Text Effect */
+.holographic-text {
+  background: linear-gradient(45deg, #00FF41, #00FFFF, #FF00FF, #00FF41);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: holographic-shift 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(0, 255, 65, 0.5));
+}
+
+@keyframes holographic-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Glitch Effect */
+.glitch-text {
+  position: relative;
+  color: #00FF41;
+  font-weight: bold;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-text::before {
+  color: #FF0040;
+  animation: glitch-1 0.3s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+  color: #00FFFF;
+  animation: glitch-2 0.3s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-1 {
+  0% { clip-path: polygon(0 0%, 100% 0%, 100% 5%, 0 5%); }
+  20% { clip-path: polygon(0 15%, 100% 15%, 100% 25%, 0 25%); }
+  40% { clip-path: polygon(0 35%, 100% 35%, 100% 50%, 0 50%); }
+  60% { clip-path: polygon(0 65%, 100% 65%, 100% 75%, 0 75%); }
+  80% { clip-path: polygon(0 85%, 100% 85%, 100% 95%, 0 95%); }
+  100% { clip-path: polygon(0 0%, 100% 0%, 100% 5%, 0 5%); }
+}
+
+@keyframes glitch-2 {
+  0% { clip-path: polygon(0 5%, 100% 5%, 100% 15%, 0 15%); }
+  20% { clip-path: polygon(0 25%, 100% 25%, 100% 35%, 0 35%); }
+  40% { clip-path: polygon(0 50%, 100% 50%, 100% 65%, 0 65%); }
+  60% { clip-path: polygon(0 75%, 100% 75%, 100% 85%, 0 85%); }
+  80% { clip-path: polygon(0 95%, 100% 95%, 100% 100%, 0 100%); }
+  100% { clip-path: polygon(0 5%, 100% 5%, 100% 15%, 0 15%); }
+}
+
+/* Neural Network Cards */
+.neural-card {
+  background: rgba(0, 26, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 255, 65, 0.3);
+  border-radius: 12px;
+  box-shadow: 
+    0 0 20px rgba(0, 255, 65, 0.1),
+    inset 0 0 20px rgba(0, 255, 65, 0.05);
+  transition: all 0.3s ease;
+}
+
+.neural-card:hover {
+  border-color: rgba(0, 255, 65, 0.6);
+  box-shadow: 
+    0 0 30px rgba(0, 255, 65, 0.3),
+    inset 0 0 30px rgba(0, 255, 65, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Quantum Buttons */
+.quantum-btn {
+  position: relative;
+  background: linear-gradient(45deg, rgba(0, 255, 65, 0.1), rgba(0, 255, 255, 0.1));
+  border: 1px solid #00FF41;
+  color: #00FF41;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.quantum-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.quantum-btn:hover::before {
+  left: 100%;
+}
+
+.quantum-btn:hover {
+  background: linear-gradient(45deg, rgba(0, 255, 65, 0.2), rgba(0, 255, 255, 0.2));
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+  transform: translateY(-1px);
+}
+
+.quantum-btn:active {
+  transform: translateY(0);
+}
+
+/* Data Visualization Effects */
+.data-stream {
+  position: relative;
+  overflow: hidden;
+}
+
+.data-stream::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00FFFF, transparent);
+  animation: data-stream 2s linear infinite;
+}
+
+/* Matrix Code Rain */
+.matrix-rain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.1;
+}
+
+.matrix-char {
+  position: absolute;
+  color: #00FF41;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  animation: matrix-rain 20s linear infinite;
+}
+
+/* Loading Animations */
+.neural-loading {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(0, 255, 65, 0.1);
+  border-top: 3px solid #00FF41;
+  border-radius: 50%;
+  animation: neural-spin 1s linear infinite;
+}
+
+@keyframes neural-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.quantum-pulse {
+  width: 20px;
+  height: 20px;
+  background: #00FF41;
+  border-radius: 50%;
+  animation: quantum-pulse 2s ease-in-out infinite;
+}
+
+@keyframes quantum-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.3;
+  }
+}
+
+/* Responsive Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.cyber-text {
+  font-family: 'JetBrains Mono', monospace;
+  color: #00FFFF;
+  text-shadow: 0 0 10px #00FFFF;
+}
+
+.matrix-text {
+  font-family: 'Share Tech Mono', monospace;
+  color: #00FF41;
+  text-shadow: 0 0 5px #00FF41;
+}
+
+/* Form Inputs */
+input, textarea, select {
+  background: rgba(0, 26, 0, 0.5);
+  border: 1px solid rgba(0, 255, 65, 0.3);
+  color: #00FF41;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: 'Orbitron', sans-serif;
+  transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #00FF41;
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+}
+
+input::placeholder, textarea::placeholder {
+  color: rgba(0, 255, 65, 0.5);
+}
+
+/* Utility Classes */
+.text-shadow-glow {
+  text-shadow: 0 0 10px currentColor;
+}
+
+.backdrop-neural {
+  backdrop-filter: blur(10px) saturate(200%);
+}
+
+.border-glow {
+  border-color: #00FF41;
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+}
+
+.bg-matrix {
+  background: linear-gradient(45deg, #000000, #001a00, #000000);
+}
+
+.text-gradient {
+  background: linear-gradient(45deg, #00FF41, #00FFFF, #FF00FF);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .holographic-text {
+    font-size: 1.5rem;
+  }
+  
+  .neural-card {
+    padding: 1rem;
+  }
+  
+  .quantum-btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+}
