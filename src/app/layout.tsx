@@ -100,7 +100,7 @@ export default function RootLayout({
           {/* Main Application */}
           <div className="relative z-20">
             <main className="min-h-screen">
-              {children}
+        {children}
             </main>
           </div>
           

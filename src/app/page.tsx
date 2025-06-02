@@ -214,7 +214,7 @@ export default function ComingSoon() {
               <h3 className="text-lg font-neural text-matrix-300">AGI SYSTEM</h3>
               <p className="text-matrix-500 font-cyber">ONLINE</p>
             </div>
-            
+
             <div className="neural-card p-6">
               <div className="text-4xl mb-3">⚡</div>
               <h3 className="text-lg font-neural text-matrix-300">QUANTUM CORE</h3>
